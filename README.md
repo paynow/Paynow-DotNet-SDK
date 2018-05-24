@@ -1,2 +1,2 @@
-# Paynow-DotNet-SDK
-.NET SDK for the Paynow API
+# Paynow Zimbabwe SDK
+.NET SDK for Paynow Zimbabwe's API
