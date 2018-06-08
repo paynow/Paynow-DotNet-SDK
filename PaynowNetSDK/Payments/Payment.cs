@@ -3,23 +3,25 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace Paynow.Payments
+namespace Webdev.Payments
 {
     /// <summary>
     ///     Represents a single transaction to be sent to Paynow
     /// </summary>
     public class Payment
     {
-        public Payment(string reference)
+        public Payment(string reference, string authEmail)
         {
             Reference = reference;
             Items = new Dictionary<string, decimal>();
+            AuthEmail = authEmail;
         }
 
-        public Payment(string reference, Dictionary<string, decimal> values)
+        public Payment(string reference, Dictionary<string, decimal> values, string authEmail)
         {
             Reference = reference;
             Items = values;
+            AuthEmail = authEmail;
         }
 
         /// <summary>
@@ -36,6 +38,11 @@ namespace Paynow.Payments
         ///     Get the total of the items in the transaction
         /// </summary>
         public decimal Total => GetTotal();
+
+        /// <summary>
+        /// Email to be sent to Paynow with the transaction 
+        /// </summary>
+        public string AuthEmail = "";
 
 
         /// <summary>
@@ -97,7 +104,7 @@ namespace Paynow.Payments
                 {"amount", Total.ToString(CultureInfo.CurrentCulture)},
                 {"id", ""},
                 {"additionalinfo", ItemsDescription()},
-                {"authemail", ""},
+                {"authemail", AuthEmail},
                 {"status", "Message"}
             };
         }

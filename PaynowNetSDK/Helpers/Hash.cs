@@ -4,12 +4,12 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Paynow.Helpers
+namespace Webdev.Helpers
 {
     public static class Hash
     {
         /// <summary>
-        /// Hash the values in the given dictonary
+        ///     Hash the values in the given dictonary
         /// </summary>
         /// <param name="values">Values to value</param>
         /// <param name="integrationKey">Paynow integration key</param>
@@ -18,7 +18,7 @@ namespace Paynow.Helpers
         {
             // TODO: Use StringBuilder for improved efficiency
             var concat = values.Aggregate("",
-                (accumulator, pair) => accumulator += pair.Key.ToLower() != "hash" ?  pair.Value : "");
+                (accumulator, pair) => accumulator += pair.Key.ToLower() != "hash" ? pair.Value : "");
 
             concat += integrationKey.ToString();
 
@@ -41,7 +41,7 @@ namespace Paynow.Helpers
 
         public static bool Verify(IDictionary<string, string> data, Guid integrationKey)
         {
-            return  Make(data, integrationKey) == data["hash"];
+            return Make(data, integrationKey) == data["hash"];
         }
     }
 }

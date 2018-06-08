@@ -1,4 +1,4 @@
-﻿namespace Paynow.Payments
+﻿namespace Webdev.Payments
 {
     public enum MobileMoneyMethod
     {

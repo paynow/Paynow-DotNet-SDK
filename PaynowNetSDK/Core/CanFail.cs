@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Paynow.Exceptions;
+using Webdev.Exceptions;
 
-namespace Paynow.Core
+namespace Webdev.Core
 {
     public abstract class CanFail
     {
-        private List<string> _errors = new List<string>();
+        private readonly List<string> _errors = new List<string>();
 
         /// <summary>
-        /// Throws an exception for critical errors and stores other non-critical errors
+        ///     Throws an exception for critical errors and stores other non-critical errors
         /// </summary>
         /// <param name="error"></param>
         /// <exception cref="InvalidIntegrationException"></exception>
@@ -20,22 +20,21 @@ namespace Paynow.Core
                 case Constants.ResponseInvalidId:
                     throw new InvalidIntegrationException();
                 default:
-                    this._errors.Add(error);
+                    _errors.Add(error);
                     break;
             }
         }
 
         /// <summary>
-        /// Get the errors sent by Paynow
+        ///     Get the errors sent by Paynow
         /// </summary>
         /// <param name="separator"></param>
         /// <returns></returns>
         public string Errors(char separator = ',')
         {
-            return this._errors
+            return _errors
                 .Aggregate(string.Empty,
                     (accumulator, value) => accumulator += string.Format("{0}{1} ", value, separator)).Trim();
         }
-
     }
 }

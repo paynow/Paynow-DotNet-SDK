@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaynowNetSDK", "PaynowNetSDK\PaynowNetSDK.csproj", "{342B76F0-DBB3-4F28-8D64-336D6188A59B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaynowWinForms", "PaynowWinForms\PaynowWinForms.csproj", "{440094FC-9605-40C4-9E71-9455F3D4CC6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{342B76F0-DBB3-4F28-8D64-336D6188A59B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{342B76F0-DBB3-4F28-8D64-336D6188A59B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{342B76F0-DBB3-4F28-8D64-336D6188A59B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{440094FC-9605-40C4-9E71-9455F3D4CC6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{440094FC-9605-40C4-9E71-9455F3D4CC6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{440094FC-9605-40C4-9E71-9455F3D4CC6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{440094FC-9605-40C4-9E71-9455F3D4CC6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

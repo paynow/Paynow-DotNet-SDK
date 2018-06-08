@@ -1,4 +1,4 @@
-﻿namespace Paynow.Core
+﻿namespace Webdev.Core
 {
     public interface IResponse
     {

@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Paynow.Http
+namespace Webdev.Http
 {
     public class Client
     {
@@ -19,13 +19,13 @@ namespace Paynow.Http
         /// <param name="url"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public async Task<string> PostAsync(string url, Dictionary<string, string> data = null)
+        public string PostAsync(string url, Dictionary<string, string> data = null)
         {
             var content = new FormUrlEncodedContent(data ?? new Dictionary<string, string>());
 
-            var response = await _client.PostAsync(url, content);
+            var response = _client.PostAsync(url, content).Result;
 
-            return await response.Content.ReadAsStringAsync();
+            return response.Content.ReadAsStringAsync().Result;
         }
     }
 }

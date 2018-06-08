@@ -1,87 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
-using Paynow.Exceptions;
+﻿using System.Collections.Generic;
+using Webdev.Exceptions;
 
-namespace Paynow.Core
+namespace Webdev.Core
 {
     public class InitResponse : CanFail
     {
-        protected IDictionary<string, string> Data { get; }
-        
-        protected bool WasSuccessful { get; set; }
-        
-        protected bool HasRedirect { get; set; }
-
         /// <summary>
-        /// InitResponse constructor.
+        ///     InitResponse constructor.
         /// </summary>
         /// <param name="response">Response data sent from Paynow</param>
         /// <exception cref="InvalidIntegrationException">If the error returned from paynow is</exception>
         public InitResponse(IDictionary<string, string> response)
         {
-            this.Data = response;
+            Data = response;
 
-            this.Load();
+            Load();
         }
-        
+
+        protected IDictionary<string, string> Data { get; }
+
+        protected bool WasSuccessful { get; set; }
+
+        protected bool HasRedirect { get; set; }
+
         /// <summary>
-        /// Reads through the response data sent from Paynow
+        ///     Reads through the response data sent from Paynow
         /// </summary>
         private void Load()
         {
-            if (this.Data.ContainsKey("status"))
-            {
-                this.WasSuccessful = this.Data["status"].ToLower() == Constants.ResponseOk;
-            }
+            if (Data.ContainsKey("status")) WasSuccessful = Data["status"].ToLower() == Constants.ResponseOk;
 
-            if (this.Data.ContainsKey("browserurl"))
-            {
-                this.HasRedirect = true;
-            }
+            if (Data.ContainsKey("browserurl")) HasRedirect = true;
 
-            if (this.WasSuccessful) return;
-            
-            if (this.Data.ContainsKey("error"))
-            {
-                this.Fail(this.Data["error"]);
-            }
+            if (WasSuccessful) return;
+
+            if (Data.ContainsKey("error")) Fail(Data["error"]);
         }
 
         /// <summary>
-        /// Returns the poll URL sent from Paynow
+        ///     Returns the poll URL sent from Paynow
         /// </summary>
         /// <returns></returns>
         public string PollUrl()
         {
-            return this.Data.ContainsKey("pollurl") ? this.Data["pollurl"] : "";
+            return Data.ContainsKey("pollurl") ? Data["pollurl"] : "";
         }
 
-        
+
         /// <summary>
-        /// Gets a boolean indicating whether a request succeeded or failed
+        ///     Gets a boolean indicating whether a request succeeded or failed
         /// </summary>
         /// <returns></returns>
         public bool Success()
         {
-            return this.WasSuccessful;
+            return WasSuccessful;
         }
 
         /// <summary>
-        /// Returns the url the user should be taken to so they can make a payment
+        ///     Returns the url the user should be taken to so they can make a payment
         /// </summary>
         /// <returns></returns>
         public string RedirectLink()
         {
-            return this.HasRedirect ? this.Data["browserurl"] : string.Empty;
+            return HasRedirect ? Data["browserurl"] : string.Empty;
         }
 
         /// <summary>
-        /// Get the original data sent from Paynow
+        ///     Get the original data sent from Paynow
         /// </summary>
         /// <returns></returns>
         public IDictionary<string, string> GetData()
         {
-            return this.Data;
+            return Data;
         }
     }
 }

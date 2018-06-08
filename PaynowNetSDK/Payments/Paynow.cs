@@ -1,44 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
-using Paynow.Core;
-using Paynow.Exceptions;
-using Paynow.Helpers;
-using Paynow.Http;
+using Webdev.Core;
+using Webdev.Exceptions;
+using Webdev.Helpers;
+using Webdev.Http;
 
-namespace Paynow.Payments
+namespace Webdev.Payments
 {
     public class Paynow
     {
         /// <summary>
-        /// Merchant's return url
-        /// </summary>
-        public string ResultUrl { get; set; } = "http://localhost";
-
-        /// <summary>
-        /// Merchant's result url
-        /// </summary>
-        public string ReturnUrl { get; set; } = "http://localhost";
-
-        /// <summary>
-        /// Merchant's integration id
-        /// </summary>
-        public Guid IntegrationKey { get; set; }
-
-        /// <summary>
-        /// Client for making http requests
-        /// </summary>
-        public Client Client { get; set; }
-
-        /// <summary>
-        /// Merchant's integration key
-        /// </summary>
-        public string IntegrationId { get; set; }
-
-        /// <summary>
-        /// Paynow constructor
+        ///     Paynow constructor
         /// </summary>
         /// <param name="integrationId"></param>
         /// <param name="integrationKey"></param>
@@ -63,18 +37,44 @@ namespace Paynow.Payments
         }
 
         /// <summary>
-        /// Creates a new transaction
+        ///     Merchant's return url
+        /// </summary>
+        public string ResultUrl { get; set; } = "http://localhost";
+
+        /// <summary>
+        ///     Merchant's result url
+        /// </summary>
+        public string ReturnUrl { get; set; } = "http://localhost";
+
+        /// <summary>
+        ///     Merchant's integration id
+        /// </summary>
+        public Guid IntegrationKey { get; set; }
+
+        /// <summary>
+        ///     Client for making http requests
+        /// </summary>
+        public Client Client { get; set; }
+
+        /// <summary>
+        ///     Merchant's integration key
+        /// </summary>
+        public string IntegrationId { get; set; }
+
+        /// <summary>
+        ///     Creates a new transaction
         /// </summary>
         /// <param name="reference"></param>
         /// <param name="values"></param>
+        /// <param name="authEmail"></param>
         /// <returns></returns>
-        public Payment CreatePayment(string reference, Dictionary<string, decimal> values = null)
+        public Payment CreatePayment(string reference, Dictionary<string, decimal> values = null, string authEmail = "")
         {
-            return values != null ? new Payment(reference, values) : new Payment(reference);
+            return values != null ? new Payment(reference, values, authEmail) : new Payment(reference, authEmail);
         }
 
         /// <summary>
-        /// Sends a payment to paynow
+        ///     Sends a payment to paynow
         /// </summary>
         /// <param name="payment"></param>
         /// <returns></returns>
@@ -94,18 +94,15 @@ namespace Paynow.Payments
         public StatusResponse PollTransaction(string url)
         {
             var response = Client.PostAsync(url, null);
-            var data = HttpUtility.ParseQueryString(response.Result).ToDictionary();
-            
-            if (!data.ContainsKey("hash") || Hash.Verify(data, IntegrationKey))
-            {
-                throw new HashMismatchException();
-            }
-            
+            var data = HttpUtility.ParseQueryString(response).ToDictionary();
+
+            if (!data.ContainsKey("hash") || Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
+
             return new StatusResponse(data);
         }
-        
+
         /// <summary>
-        /// Process a status update from Paynow
+        ///     Process a status update from Paynow
         /// </summary>
         /// <param name="response">Raw POST string sent from Paynow</param>
         /// <returns></returns>
@@ -113,34 +110,29 @@ namespace Paynow.Payments
         public StatusResponse ProcessStatusUpdate(string response)
         {
             var data = HttpUtility.ParseQueryString(response).ToDictionary();
-            
-            if (!data.ContainsKey("hash") || Hash.Verify(data, IntegrationKey))
-            {
-                throw new HashMismatchException();
-            }
-            
+
+            if (!data.ContainsKey("hash") || Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
+
             return new StatusResponse(data);
         }
-        
-        
+
+
         /// <summary>
-        /// Process a status update from Paynow
+        ///     Process a status update from Paynow
         /// </summary>
         /// <param name="response">Key-value pairs of data sent from Paynow</param>
         /// <returns></returns>
         /// <exception cref="HashMismatchException"></exception>
         public StatusResponse ProcessStatusUpdate(Dictionary<string, string> response)
-        {            
+        {
             if (!response.ContainsKey("hash") || Hash.Verify(response, IntegrationKey))
-            {
                 throw new HashMismatchException();
-            }
-            
+
             return new StatusResponse(response);
         }
-        
+
         /// <summary>
-        /// Send a mobile transaction to paynow
+        ///     Send a mobile transaction to paynow
         /// </summary>
         /// <param name="payment"></param>
         /// <param name="phone"></param>
@@ -165,7 +157,7 @@ namespace Paynow.Payments
         }
 
         /// <summary>
-        /// Initiate a new Paynow mobile transaction
+        ///     Initiate a new Paynow mobile transaction
         /// </summary>
         /// <param name="payment"></param>
         /// <param name="phone"></param>
@@ -175,19 +167,16 @@ namespace Paynow.Payments
         {
             var data = FormatMobileInitRequest(payment, phone, method);
 
-            var response = Client.PostAsync(Constants.UrlInitiateTransaction, data).Result;
+            var response = Client.PostAsync(Constants.UrlInitiateTransaction, data);
 
-            if (!data.ContainsKey("hash") || Hash.Verify(data, IntegrationKey))
-            {
-                throw new HashMismatchException();
-            }
-            
+            if (!data.ContainsKey("hash") || Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
+
             return new InitResponse(HttpUtility.ParseQueryString(response).ToDictionary());
         }
 
 
         /// <summary>
-        /// Initiate a new Paynow transaction
+        ///     Initiate a new Paynow transaction
         /// </summary>
         /// <param name="payment"></param>
         /// <returns></returns>
@@ -196,18 +185,15 @@ namespace Paynow.Payments
         {
             var data = FormatInitRequest(payment);
 
-            var response = Client.PostAsync(Constants.UrlInitiateTransaction, data).Result;
+            var response = Client.PostAsync(Constants.UrlInitiateTransaction, data);
 
-            if (!data.ContainsKey("hash") || Hash.Verify(data, IntegrationKey))
-            {
-                throw new HashMismatchException();
-            }
-            
+            if (!data.ContainsKey("hash") || !Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
+
             return new InitResponse(HttpUtility.ParseQueryString(response).ToDictionary());
         }
 
         /// <summary>
-        /// Formats an init request before its sent to Paynow
+        ///     Formats an init request before its sent to Paynow
         /// </summary>
         /// <param name="payment"></param>
         /// <returns></returns>
@@ -225,10 +211,10 @@ namespace Paynow.Payments
         }
 
         /// <summary>
-        /// Initiate a new Paynow transaction
+        ///     Initiate a new Paynow transaction
         /// </summary>
         /// <remarks>
-        /// Currently, only eccocash is supported
+        ///     Currently, only eccocash is supported
         /// </remarks>
         /// <param name="payment">The transaction to be sent to Paynow</param>
         /// <param name="phone">The user's phone number</param>

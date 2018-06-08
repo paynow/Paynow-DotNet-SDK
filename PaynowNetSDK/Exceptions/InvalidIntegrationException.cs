@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Paynow.Exceptions
+namespace Webdev.Exceptions
 {
     public class InvalidIntegrationException : Exception
     {
