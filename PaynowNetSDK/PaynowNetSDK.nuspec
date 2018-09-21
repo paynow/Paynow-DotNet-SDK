@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>Paynow</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://gitlab.com/paynow-developer-hub/Paynow-DotNet-SDK/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://developers.paynow.co.zw/docs/csharp_quickstart.html</projectUrl>
+    <iconUrl>http://docs.devsite.co.zw/img/favicon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Paynow Paynow-Zimbabwe Zimbabwe-Online-Payments</tags>
+  </metadata>
+</package>

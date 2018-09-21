@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -53,6 +54,30 @@ namespace Webdev.Payments
         public Payment Add(string title, decimal amount)
         {
             Items.Add(title, amount);
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Add a new item to the transaction
+        /// </summary>
+        /// <param name="title">The name of the item</param>
+        /// <param name="amount">The cost of the item</param>
+        public Payment Add(string title, float amount)
+        {
+            Items.Add(title, Convert.ToDecimal(amount));
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Add a new item to the transaction
+        /// </summary>
+        /// <param name="title">The name of the item</param>
+        /// <param name="amount">The cost of the item</param>
+        public Payment Add(string title, int amount)
+        {
+            Items.Add(title, Convert.ToDecimal(amount));
 
             return this;
         }

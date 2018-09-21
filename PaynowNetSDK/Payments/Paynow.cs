@@ -61,6 +61,7 @@ namespace Webdev.Payments
         /// </summary>
         public string IntegrationId { get; set; }
 
+
         /// <summary>
         ///     Creates a new transaction
         /// </summary>
@@ -71,6 +72,17 @@ namespace Webdev.Payments
         public Payment CreatePayment(string reference, Dictionary<string, decimal> values = null, string authEmail = "")
         {
             return values != null ? new Payment(reference, values, authEmail) : new Payment(reference, authEmail);
+        }
+
+        /// <summary>
+        ///     Creates a new transaction (this overload is used for mobile payments where email is required)
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="authEmail"></param>
+        /// <returns></returns>
+        public Payment CreatePayment(string reference, string authEmail)
+        {
+            return new Payment(reference, authEmail);
         }
 
         /// <summary>
@@ -93,10 +105,10 @@ namespace Webdev.Payments
 
         public StatusResponse PollTransaction(string url)
         {
-            var response = Client.PostAsync(url, null);
+            var response = Client.PostAsync(url);
             var data = HttpUtility.ParseQueryString(response).ToDictionary();
 
-            if (!data.ContainsKey("hash") || Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
+            if (!data.ContainsKey("hash") || !Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
 
             return new StatusResponse(data);
         }
@@ -111,7 +123,7 @@ namespace Webdev.Payments
         {
             var data = HttpUtility.ParseQueryString(response).ToDictionary();
 
-            if (!data.ContainsKey("hash") || Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
+            if (!data.ContainsKey("hash") || !Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
 
             return new StatusResponse(data);
         }
@@ -125,7 +137,7 @@ namespace Webdev.Payments
         /// <exception cref="HashMismatchException"></exception>
         public StatusResponse ProcessStatusUpdate(Dictionary<string, string> response)
         {
-            if (!response.ContainsKey("hash") || Hash.Verify(response, IntegrationKey))
+            if (!response.ContainsKey("hash") || !Hash.Verify(response, IntegrationKey))
                 throw new HashMismatchException();
 
             return new StatusResponse(response);
@@ -141,19 +153,23 @@ namespace Webdev.Payments
         /// <exception cref="InvalidReferenceException"></exception>
         /// <exception cref="EmptyCartException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public InitResponse SendMobile(Payment payment, string phone,
-            MobileMoneyMethod method = MobileMoneyMethod.Ecocash)
+        public InitResponse SendMobile(Payment payment, string phone, string method)
         {
             if (string.IsNullOrEmpty(payment.Reference))
+            {
                 throw new InvalidReferenceException();
-
-            if (payment.Total <= 0)
+            }
+            if (payment.Total <= decimal.Zero)
+            {
                 throw new EmptyCartException();
+            }
 
-            if (!Regex.IsMatch(phone, "07([7,8])((\\1=7)[1-9]|[2-5])\\d{6}"))
-                throw new ArgumentException("Invalid phone number", nameof(phone));
+            if (string.IsNullOrEmpty(payment.AuthEmail))
+            {
+                throw new ArgumentException("When creating a mobile payment, please make sure you pass the auth email as the second parameter to the CreatePayment method", nameof(payment));
+            }
 
-            return InitMobile(payment, phone, method);
+            return this.InitMobile(payment, phone, method);
         }
 
         /// <summary>
@@ -163,15 +179,19 @@ namespace Webdev.Payments
         /// <param name="phone"></param>
         /// <param name="method"></param>
         /// <returns></returns>
-        private InitResponse InitMobile(Payment payment, string phone, MobileMoneyMethod method)
+        private InitResponse InitMobile(Payment payment, string phone, string method)
         {
             var data = FormatMobileInitRequest(payment, phone, method);
 
-            var response = Client.PostAsync(Constants.UrlInitiateTransaction, data);
+            var response =
+                HttpUtility.ParseQueryString(
+                    Client.PostAsync(Constants.UrlInitiateTransaction, data)
+                ).ToDictionary();
+                
 
-            if (!data.ContainsKey("hash") || Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
+            if (!response.ContainsKey("hash") || !Hash.Verify(response, IntegrationKey)) throw new HashMismatchException();
 
-            return new InitResponse(HttpUtility.ParseQueryString(response).ToDictionary());
+            return new InitResponse(response);
         }
 
 
@@ -185,11 +205,14 @@ namespace Webdev.Payments
         {
             var data = FormatInitRequest(payment);
 
-            var response = Client.PostAsync(Constants.UrlInitiateTransaction, data);
+            var response =
+                HttpUtility.ParseQueryString(
+                    Client.PostAsync(Constants.UrlInitiateTransaction, data)
+               ).ToDictionary();
 
-            if (!data.ContainsKey("hash") || !Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
+            if (!response.ContainsKey("hash") || !Hash.Verify(response, IntegrationKey)) throw new HashMismatchException();
 
-            return new InitResponse(HttpUtility.ParseQueryString(response).ToDictionary());
+            return new InitResponse(response);
         }
 
         /// <summary>
@@ -221,7 +244,7 @@ namespace Webdev.Payments
         /// <param name="method">The mobile transaction method i.e ecocash, telecash</param>
         /// <returns></returns>
         private Dictionary<string, string> FormatMobileInitRequest(Payment payment, string phone,
-            MobileMoneyMethod method)
+            string method)
         {
             var items = payment.ToDictionary();
 
@@ -229,7 +252,7 @@ namespace Webdev.Payments
             items["resulturl"] = ResultUrl.Trim();
             items["id"] = IntegrationId;
             items["phone"] = phone;
-            items["method"] = method.GetString();
+            items["method"] = method;
 
             items.Add("hash", Hash.Make(items, IntegrationKey));
 
