@@ -6,6 +6,7 @@ using Webdev.Core;
 using Webdev.Exceptions;
 using Webdev.Helpers;
 using Webdev.Http;
+// ReSharper disable UnusedMember.Global
 
 namespace Webdev.Payments
 {
@@ -159,6 +160,7 @@ namespace Webdev.Payments
             {
                 throw new InvalidReferenceException();
             }
+
             if (payment.Total <= decimal.Zero)
             {
                 throw new EmptyCartException();
@@ -166,7 +168,9 @@ namespace Webdev.Payments
 
             if (string.IsNullOrEmpty(payment.AuthEmail))
             {
-                throw new ArgumentException("When creating a mobile payment, please make sure you pass the auth email as the second parameter to the CreatePayment method", nameof(payment));
+                throw new ArgumentException(
+                    "When creating a mobile payment, please make sure you pass the auth email as the second parameter to the CreatePayment method",
+                    nameof(payment));
             }
 
             return this.InitMobile(payment, phone, method);
@@ -187,9 +191,14 @@ namespace Webdev.Payments
                 HttpUtility.ParseQueryString(
                     Client.PostAsync(Constants.UrlInitiateTransaction, data)
                 ).ToDictionary();
-                
 
-            if (!response.ContainsKey("hash") || !Hash.Verify(response, IntegrationKey)) throw new HashMismatchException();
+            if (!response.ContainsKey("status"))
+                throw new Exception("An unknown error occured while querying Paynow API");
+
+
+            if (response["status"].ToLower() != "error" &&
+                (!response.ContainsKey("hash") || !Hash.Verify(response, IntegrationKey)))
+                throw new HashMismatchException();
 
             return new InitResponse(response);
         }
@@ -208,9 +217,14 @@ namespace Webdev.Payments
             var response =
                 HttpUtility.ParseQueryString(
                     Client.PostAsync(Constants.UrlInitiateTransaction, data)
-               ).ToDictionary();
+                ).ToDictionary();
 
-            if (!response.ContainsKey("hash") || !Hash.Verify(response, IntegrationKey)) throw new HashMismatchException();
+            if (!response.ContainsKey("status"))
+                throw new Exception("An unknown error occured while querying Paynow API");
+
+            if (response["status"].ToLower() != "error" &&
+                (!response.ContainsKey("hash") || !Hash.Verify(response, IntegrationKey)))
+                throw new HashMismatchException();
 
             return new InitResponse(response);
         }
