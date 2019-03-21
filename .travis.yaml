@@ -1,0 +1,6 @@
+language: csharp
+solution: PaynowSDK.sln
+install:
+  - nuget restore PaynowSDK.sln
+script:
+  - msbuild /p:Configuration=Release PaynowSDK.sln
