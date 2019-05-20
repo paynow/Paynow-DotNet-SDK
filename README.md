@@ -171,12 +171,12 @@ class Program
         // Create a new payment 
         var payment = paynow.CreatePayment("Invoice 35");
     
-        // Send payment to paynow
-        var response = paynow.Send(payment);
-        
         // Add items to the payment
         payment.Add("Bananas", 2.5);
         payment.Add("Apples", 3.4);
+        
+        // Send payment to paynow
+        var response = paynow.Send(payment);
     
         // Check if payment was sent without error
         if(response.Success())  
