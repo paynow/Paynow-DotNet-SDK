@@ -13,10 +13,8 @@
         public const string ResponseAwaitingDelivery = "awaiting delivery";
         public const string ResponseCreatedNotPaid = "created but not paid";
 
-        public const string UrlInitiateTransaction = "https://paynow.webdevworld.com/interface/initiatetransaction";
-
-//        public const string UrlInitiateTransaction = "http://localhost";
-        public const string UrlInitiateMobileTransaction = "https://paynow.webdevworld.com/interface/remotetransaction";
+        public const string UrlInitiateTransaction = "https://www.paynow.co.zw/interface/initiatetransaction";
+        public const string UrlInitiateMobileTransaction = "https://www.paynow.co.zw/interface/remotetransaction";
         public const string MobileMoneyMethodEcocash = "ecocash";
     }
 }

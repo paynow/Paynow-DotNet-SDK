@@ -189,7 +189,7 @@ namespace Webdev.Payments
 
             var response =
                 HttpUtility.ParseQueryString(
-                    Client.PostAsync(Constants.UrlInitiateTransaction, data)
+                    Client.PostAsync(Constants.UrlInitiateMobileTransaction, data)
                 ).ToDictionary();
 
             if (!response.ContainsKey("status"))
