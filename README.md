@@ -9,7 +9,7 @@
 
 This library has a set of prerequisites that must be met for it to work
 
-1.  .NET 4.5.2 or later
+1.  .NET Framework 4.5.2 or later (although the project targets .NET Framework 4.5.2, the code is directly compatible with .NET Core 2.0 or later)
 
 ## Installation
 
