@@ -93,7 +93,7 @@ if(response.Success())
 If you want to send an express (mobile) checkout request instead, when creating a payment you make a call to an overload of the `CreatePayment` method.This overload takes in two arguments, the reference of the transaction followed by the payer's email address. **Mobile transactions** require that you pass in the email address of the user making the payment. The email address is used by Paynow to email a payment summary and reference to the person who has made payment. Its specifically for the customer, not the merchant. However, there’s nothing stopping you using your own email address if you don’t mind the customer not getting a copy of the payment.
 
 Additionally, you send the payment to Paynow by making a call to the `SendMobile` in the `paynow` object
-instead of the `Send` method. The `SendMobile` method unlike the `Send` method takes in two additional arguments i.e The phone number to send the payment request to and the mobile money method to use for the request. **Note that currently only ecocash is supported**
+instead of the `Send` method. The `SendMobile` method unlike the `Send` method takes in two additional arguments i.e The phone number to send the payment request to and the mobile money method to use for the request. **Note that currently only ecocash and onemoney are supported**
 
 **Note: The payer's email address is required for mobile transactions**
 
