@@ -100,10 +100,7 @@ namespace Webdev.Payments
         /// </summary>
         public string ItemsDescription()
         {
-            var sb = Items.Aggregate(new StringBuilder(),
-                (current, next) => current.AppendFormat("{0}, ", next.Key));
-
-            return sb.ToString().Trim();
+            return string.Join(", ", Items.Keys);
         }
 
         /// <summary>
