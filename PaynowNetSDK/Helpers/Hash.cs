@@ -16,16 +16,25 @@ namespace Webdev.Helpers
         /// <returns></returns>
         public static string Make(IDictionary<string, string> values, Guid integrationKey)
         {
-            // TODO: Use StringBuilder for improved efficiency
-            var concat = values.Aggregate("",
-                (accumulator, pair) => accumulator += pair.Key.ToLower() != "hash" ? pair.Value : "");
+            var concat = new StringBuilder();
 
-            concat += integrationKey.ToString();
+            // add the value from each key/value pair to get a string we'll use to generate the hash
+            foreach (var pair in values)
+            {
+                // ignore the 'hash' key/value pair if its included in the list because its not used for hash generation
+                if (!pair.Key.Equals("hash", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    concat.Append(pair.Value);
+                }
+            }
 
-            var hash = new byte[0];
+            // append the paynow integration key
+            concat.Append(integrationKey.ToString());
+
+            byte[] hash;
             using (var sha = SHA512.Create())
             {
-                hash = sha.ComputeHash(Encoding.UTF8.GetBytes(concat));
+                hash = sha.ComputeHash(Encoding.UTF8.GetBytes(concat.ToString()));
             }
 
             return GetStringFromHash(hash);
@@ -35,7 +44,13 @@ namespace Webdev.Helpers
         private static string GetStringFromHash(byte[] hash)
         {
             var result = new StringBuilder();
-            foreach (var t in hash) result.Append(t.ToString("X2"));
+
+            // convert the byte array to a string by concatenating the hex value of each byte
+            foreach (var t in hash)
+            {
+                result.Append(t.ToString("X2"));
+            }
+
             return result.ToString();
         }
 

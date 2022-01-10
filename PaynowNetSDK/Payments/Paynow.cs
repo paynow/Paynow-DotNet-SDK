@@ -23,16 +23,15 @@ namespace Webdev.Payments
         {
             if (string.IsNullOrEmpty(integrationId))
                 throw new ArgumentException("Integration id cannot be empty", nameof(integrationId));
+
             if (string.IsNullOrEmpty(integrationKey))
                 throw new ArgumentException("Integration key cannot be empty", nameof(integrationKey));
-
 
             IntegrationId = integrationId;
             IntegrationKey = Guid.Parse(integrationKey);
 
             if (resultUrl != null)
                 ResultUrl = resultUrl;
-
 
             Client = new Client();
         }
@@ -62,6 +61,10 @@ namespace Webdev.Payments
         /// </summary>
         public string IntegrationId { get; set; }
 
+        /// <summary>
+        ///     The base URL of the Paynow server we're communicating with. Do NOT include the trailing slash (/)
+        /// </summary>
+        public string PaynowBaseUrl { get; set; } = "https://www.paynow.co.zw";
 
         /// <summary>
         ///     Creates a new transaction
@@ -129,7 +132,6 @@ namespace Webdev.Payments
             return new StatusResponse(data);
         }
 
-
         /// <summary>
         ///     Process a status update from Paynow
         /// </summary>
@@ -187,22 +189,20 @@ namespace Webdev.Payments
         {
             var data = FormatMobileInitRequest(payment, phone, method);
 
-            var response =
-                HttpUtility.ParseQueryString(
-                    Client.PostAsync(Constants.UrlInitiateMobileTransaction, data)
-                ).ToDictionary();
+            var response = Client.PostAsync(PaynowBaseUrl + Constants.UrlInitiateMobileTransaction, data);
 
-            if (!response.ContainsKey("status"))
+            var parsedResponse = HttpUtility.ParseQueryString(response).ToDictionary();
+
+            if (!parsedResponse.ContainsKey("status"))
                 throw new Exception("An unknown error occured while querying Paynow API");
 
 
-            if (response["status"].ToLower() != "error" &&
-                (!response.ContainsKey("hash") || !Hash.Verify(response, IntegrationKey)))
+            if (parsedResponse["status"].ToLower() != "error" &&
+                (!parsedResponse.ContainsKey("hash") || !Hash.Verify(parsedResponse, IntegrationKey)))
                 throw new HashMismatchException();
 
-            return new InitResponse(response);
+            return new InitResponse(parsedResponse);
         }
-
 
         /// <summary>
         ///     Initiate a new Paynow transaction
@@ -214,19 +214,18 @@ namespace Webdev.Payments
         {
             var data = FormatInitRequest(payment);
 
-            var response =
-                HttpUtility.ParseQueryString(
-                    Client.PostAsync(Constants.UrlInitiateTransaction, data)
-                ).ToDictionary();
+            var response = Client.PostAsync(PaynowBaseUrl + Constants.UrlInitiateTransaction, data);
 
-            if (!response.ContainsKey("status"))
+            var parsedResponse = HttpUtility.ParseQueryString(response).ToDictionary();
+
+            if (!parsedResponse.ContainsKey("status"))
                 throw new Exception("An unknown error occured while querying Paynow API");
 
-            if (response["status"].ToLower() != "error" &&
-                (!response.ContainsKey("hash") || !Hash.Verify(response, IntegrationKey)))
+            if (parsedResponse["status"].ToLower() != "error" &&
+                (!parsedResponse.ContainsKey("hash") || !Hash.Verify(parsedResponse, IntegrationKey)))
                 throw new HashMismatchException();
 
-            return new InitResponse(response);
+            return new InitResponse(parsedResponse);
         }
 
         /// <summary>
@@ -257,8 +256,7 @@ namespace Webdev.Payments
         /// <param name="phone">The user's phone number</param>
         /// <param name="method">The mobile transaction method i.e ecocash, telecash</param>
         /// <returns></returns>
-        private Dictionary<string, string> FormatMobileInitRequest(Payment payment, string phone,
-            string method)
+        private Dictionary<string, string> FormatMobileInitRequest(Payment payment, string phone, string method)
         {
             var items = payment.ToDictionary();
 
