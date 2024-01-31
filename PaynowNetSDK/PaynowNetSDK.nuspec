@@ -1,18 +1,22 @@
 <?xml version="1.0"?>
 <package >
-  <metadata>
-    <id>Paynow</id>
-    <version>1.0.4</version>
-    <title>Paynow .NET SDK</title>
-    <authors>Softwarehouse (Pvt) Ltd</authors>
-    <owners>Softwarehouse (Pvt) Ltd</owners>
-    <licenseUrl>https://gitlab.com/paynow-developer-hub/Paynow-DotNet-SDK/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://developers.paynow.co.zw/docs/csharp_quickstart.html</projectUrl>
-    <iconUrl>http://docs.devsite.co.zw/img/favicon.png</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A simple .NET SDK to ease the merchant integration with Paynow Zimbabwe's payment gateway</description>
-    <releaseNotes></releaseNotes>
-    <copyright>Softwarehouse (Pvt) Ltd 2024</copyright>
-    <tags>Paynow Paynow-Zimbabwe Zimbabwe-Online-Payments Online Payment Gateway Zimbabwe Make Payments Online Zimbabwe</tags>
-  </metadata>
+	<metadata>
+		<id>Paynow</id>
+		<version>1.0.4</version>
+		<title>Paynow .NET SDK</title>
+		<authors>Softwarehouse (Pvt) Ltd</authors>
+		<owners>Softwarehouse (Pvt) Ltd</owners>
+		<licenseUrl>https://gitlab.com/paynow-developer-hub/Paynow-DotNet-SDK/blob/master/LICENSE</licenseUrl>
+		<projectUrl>https://developers.paynow.co.zw/docs/csharp_quickstart.html</projectUrl>
+		<iconUrl>http://docs.devsite.co.zw/img/favicon.png</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>A simple .NET SDK to ease the merchant integration with Paynow Zimbabwe's payment gateway</description>
+		<releaseNotes></releaseNotes>
+		<copyright>Softwarehouse (Pvt) Ltd 2024</copyright>
+		<tags>Paynow Paynow-Zimbabwe Zimbabwe-Online-Payments Online Payment Gateway Zimbabwe Make Payments Online Zimbabwe</tags>
+	</metadata>
+	<files>
+		<file src="bin\Release\Paynow.dll" target="bin" />
+		<file src="bin\Release\Paynow.pdb" target="bin" />
+	</files>
 </package>
