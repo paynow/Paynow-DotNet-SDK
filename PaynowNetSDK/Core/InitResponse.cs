@@ -6,7 +6,7 @@ namespace Webdev.Core
     public class InitResponse : CanFail
     {
         /// <summary>
-        ///     InitResponse constructor.
+        /// InitResponse constructor.
         /// </summary>
         /// <param name="response">Response data sent from Paynow</param>
         /// <exception cref="InvalidIntegrationException">If the error returned from paynow is</exception>
@@ -24,7 +24,7 @@ namespace Webdev.Core
         protected bool HasRedirect { get; set; }
 
         /// <summary>
-        ///     Reads through the response data sent from Paynow
+        /// Reads through the response data sent from Paynow
         /// </summary>
         private void Load()
         {
@@ -38,7 +38,7 @@ namespace Webdev.Core
         }
 
         /// <summary>
-        ///     Returns the poll URL sent from Paynow
+        /// Returns the poll URL sent from Paynow
         /// </summary>
         /// <returns></returns>
         public string PollUrl()
@@ -48,7 +48,7 @@ namespace Webdev.Core
 
 
         /// <summary>
-        ///     Gets a boolean indicating whether a request succeeded or failed
+        /// Gets a boolean indicating whether a request succeeded or failed
         /// </summary>
         /// <returns></returns>
         public bool Success()
@@ -57,7 +57,7 @@ namespace Webdev.Core
         }
 
         /// <summary>
-        ///     Returns the url the user should be taken to so they can make a payment
+        /// Returns the url the user should be taken to so they can make a payment
         /// </summary>
         /// <returns></returns>
         public string RedirectLink()
@@ -66,7 +66,7 @@ namespace Webdev.Core
         }
 
         /// <summary>
-        ///     Get the original data sent from Paynow
+        /// Get the original data sent from Paynow
         /// </summary>
         /// <returns></returns>
         public IDictionary<string, string> GetData()

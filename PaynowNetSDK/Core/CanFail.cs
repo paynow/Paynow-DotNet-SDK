@@ -9,7 +9,7 @@ namespace Webdev.Core
         private readonly List<string> _errors = new List<string>();
 
         /// <summary>
-        ///     Throws an exception for critical errors and stores other non-critical errors
+        /// Throws an exception for critical errors and stores other non-critical errors
         /// </summary>
         /// <param name="error"></param>
         /// <exception cref="InvalidIntegrationException"></exception>
@@ -26,7 +26,7 @@ namespace Webdev.Core
         }
 
         /// <summary>
-        ///     Get the errors sent by Paynow
+        /// Get the errors sent by Paynow
         /// </summary>
         /// <param name="separator"></param>
         /// <returns></returns>

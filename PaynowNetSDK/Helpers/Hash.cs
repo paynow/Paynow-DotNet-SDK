@@ -9,32 +9,24 @@ namespace Webdev.Helpers
     public static class Hash
     {
         /// <summary>
-        ///     Hash the values in the given dictonary
+        /// Hash the values in the given dictonary
         /// </summary>
         /// <param name="values">Values to value</param>
         /// <param name="integrationKey">Paynow integration key</param>
         /// <returns></returns>
         public static string Make(IDictionary<string, string> values, Guid integrationKey)
         {
-            var concat = new StringBuilder();
-
-            // add the value from each key/value pair to get a string we'll use to generate the hash
-            foreach (var pair in values)
-            {
-                // ignore the 'hash' key/value pair if its included in the list because its not used for hash generation
-                if (!pair.Key.Equals("hash", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    concat.Append(pair.Value);
-                }
-            }
-
-            // append the paynow integration key
-            concat.Append(integrationKey.ToString());
+            string concat = string.Join("",
+                values
+                    .Where(c => c.Key.ToLowerInvariant() != "hash")
+                    .Select(c => c.Value?.Trim() ?? "")
+                    .ToArray()
+            );
 
             byte[] hash;
             using (var sha = SHA512.Create())
             {
-                hash = sha.ComputeHash(Encoding.UTF8.GetBytes(concat.ToString()));
+                hash = sha.ComputeHash(Encoding.UTF8.GetBytes(concat + integrationKey));
             }
 
             return GetStringFromHash(hash);

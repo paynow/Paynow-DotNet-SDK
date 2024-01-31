@@ -7,7 +7,7 @@ using System.Text;
 namespace Webdev.Payments
 {
     /// <summary>
-    ///     Represents a single transaction to be sent to Paynow
+    /// Represents a single transaction to be sent to Paynow
     /// </summary>
     public class Payment
     {
@@ -26,17 +26,17 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     This is the reference for the transaction (like an id in the database)
+        /// This is the reference for the transaction (like an id in the database)
         /// </summary>
         public string Reference { get; set; }
 
         /// <summary>
-        ///     List of the items in the transaction
+        /// List of the items in the transaction
         /// </summary>
         private Dictionary<string, decimal> Items { get; }
 
         /// <summary>
-        ///     Get the total of the items in the transaction
+        /// Get the total of the items in the transaction
         /// </summary>
         public decimal Total => GetTotal();
 
@@ -47,7 +47,7 @@ namespace Webdev.Payments
 
 
         /// <summary>
-        ///     Add a new item to the transaction
+        /// Add a new item to the transaction
         /// </summary>
         /// <param name="title">The name of the item</param>
         /// <param name="amount">The cost of the item</param>
@@ -59,7 +59,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Add a new item to the transaction
+        /// Add a new item to the transaction
         /// </summary>
         /// <param name="title">The name of the item</param>
         /// <param name="amount">The cost of the item</param>
@@ -71,7 +71,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Add a new item to the transaction
+        /// Add a new item to the transaction
         /// </summary>
         /// <param name="title">The name of the item</param>
         /// <param name="amount">The cost of the item</param>
@@ -83,7 +83,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Remove an item from the transaction
+        /// Remove an item from the transaction
         /// </summary>
         /// <param name="title"></param>
         public Payment Remove(string title)
@@ -96,7 +96,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Get the string representation of the items in the transaction
+        /// Get the string representation of the items in the transaction
         /// </summary>
         public string ItemsDescription()
         {
@@ -104,7 +104,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Get the total cost of the items in the transaction
+        /// Get the total cost of the items in the transaction
         /// </summary>
         private decimal GetTotal()
         {
@@ -113,7 +113,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Get the items in the transaction as a dictionary
+        /// Get the items in the transaction as a dictionary
         /// </summary>
         /// <returns></returns>
         public Dictionary<string, string> ToDictionary()

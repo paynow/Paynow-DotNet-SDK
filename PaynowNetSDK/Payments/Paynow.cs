@@ -13,7 +13,7 @@ namespace Webdev.Payments
     public class Paynow
     {
         /// <summary>
-        ///     Paynow constructor
+        /// Paynow constructor
         /// </summary>
         /// <param name="integrationId"></param>
         /// <param name="integrationKey"></param>
@@ -37,37 +37,37 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Merchant's return url
+        /// Merchant's return url
         /// </summary>
         public string ResultUrl { get; set; } = "http://localhost";
 
         /// <summary>
-        ///     Merchant's result url
+        /// Merchant's result url
         /// </summary>
         public string ReturnUrl { get; set; } = "http://localhost";
 
         /// <summary>
-        ///     Merchant's integration id
+        /// Merchant's integration id
         /// </summary>
         public Guid IntegrationKey { get; set; }
 
         /// <summary>
-        ///     Client for making http requests
+        /// Client for making http requests
         /// </summary>
         public Client Client { get; set; }
 
         /// <summary>
-        ///     Merchant's integration key
+        /// Merchant's integration key
         /// </summary>
         public string IntegrationId { get; set; }
 
         /// <summary>
-        ///     The base URL of the Paynow server we're communicating with. Do NOT include the trailing slash (/)
+        /// The base URL of the Paynow server we're communicating with. Do NOT include the trailing slash (/)
         /// </summary>
         public string PaynowBaseUrl { get; set; } = "https://www.paynow.co.zw";
 
         /// <summary>
-        ///     Creates a new transaction
+        /// Creates a new transaction
         /// </summary>
         /// <param name="reference"></param>
         /// <param name="values"></param>
@@ -79,7 +79,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Creates a new transaction (this overload is used for mobile payments where email is required)
+        /// Creates a new transaction (this overload is used for mobile payments where email is required)
         /// </summary>
         /// <param name="reference"></param>
         /// <param name="authEmail"></param>
@@ -90,7 +90,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Sends a payment to paynow
+        /// Sends a payment to paynow
         /// </summary>
         /// <param name="payment"></param>
         /// <returns></returns>
@@ -118,7 +118,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Process a status update from Paynow
+        /// Process a status update from Paynow
         /// </summary>
         /// <param name="response">Raw POST string sent from Paynow</param>
         /// <returns></returns>
@@ -133,7 +133,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Process a status update from Paynow
+        /// Process a status update from Paynow
         /// </summary>
         /// <param name="response">Key-value pairs of data sent from Paynow</param>
         /// <returns></returns>
@@ -147,7 +147,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Send a mobile transaction to paynow
+        /// Send a mobile transaction to paynow
         /// </summary>
         /// <param name="payment"></param>
         /// <param name="phone"></param>
@@ -179,7 +179,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Initiate a new Paynow mobile transaction
+        /// Initiate a new Paynow mobile transaction
         /// </summary>
         /// <param name="payment"></param>
         /// <param name="phone"></param>
@@ -205,7 +205,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Initiate a new Paynow transaction
+        /// Initiate a new Paynow transaction
         /// </summary>
         /// <param name="payment"></param>
         /// <returns></returns>
@@ -229,7 +229,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Formats an init request before its sent to Paynow
+        /// Formats an init request before its sent to Paynow
         /// </summary>
         /// <param name="payment"></param>
         /// <returns></returns>
@@ -247,10 +247,10 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        ///     Initiate a new Paynow transaction
+        /// Initiate a new Paynow transaction
         /// </summary>
         /// <remarks>
-        ///     Currently, only eccocash is supported
+        /// Currently, only eccocash is supported
         /// </remarks>
         /// <param name="payment">The transaction to be sent to Paynow</param>
         /// <param name="phone">The user's phone number</param>
