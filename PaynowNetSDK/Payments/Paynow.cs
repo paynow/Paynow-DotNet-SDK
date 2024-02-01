@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using Webdev.Core;
 using Webdev.Exceptions;
@@ -90,7 +91,7 @@ namespace Webdev.Payments
         }
 
         /// <summary>
-        /// Sends a payment to paynow
+        /// Sends a payment to Paynow
         /// </summary>
         /// <param name="payment"></param>
         /// <returns></returns>
@@ -98,18 +99,45 @@ namespace Webdev.Payments
         /// <exception cref="EmptyCartException"></exception>
         public InitResponse Send(Payment payment)
         {
+            return SendAsync(payment).Result;
+        }
+
+        /// <summary>
+        /// Sends a payment to Paynow
+        /// </summary>
+        /// <param name="payment"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidReferenceException"></exception>
+        /// <exception cref="EmptyCartException"></exception>
+        public async Task<InitResponse> SendAsync(Payment payment)
+        {
             if (string.IsNullOrEmpty(payment.Reference))
                 throw new InvalidReferenceException();
 
             if (payment.Total <= 0)
                 throw new EmptyCartException();
 
-            return Init(payment);
+            return await InitAsync(payment);
         }
 
+        /// <summary>
+        /// Get a transaction status from Paynow
+        /// </summary>
+        /// <param name="url">The pollurl supplied in the response from Paynow after the transaction was initiated</param>
+        /// <exception cref="HashMismatchException"></exception>
         public StatusResponse PollTransaction(string url)
         {
-            var response = Client.PostAsync(url);
+            return PollTransactionAsync(url).Result;
+        }
+
+        /// <summary>
+        /// Get a transaction status from Paynow
+        /// </summary>
+        /// <param name="url">The pollurl supplied in the response from Paynow after the transaction was initiated</param>
+        /// <exception cref="HashMismatchException"></exception>
+        public async Task<StatusResponse> PollTransactionAsync(string url)
+        {
+            var response = await Client.PostAsync(url);
             var data = HttpUtility.ParseQueryString(response).ToDictionary();
 
             if (!data.ContainsKey("hash") || !Hash.Verify(data, IntegrationKey)) throw new HashMismatchException();
@@ -156,7 +184,7 @@ namespace Webdev.Payments
         /// <exception cref="InvalidReferenceException"></exception>
         /// <exception cref="EmptyCartException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public InitResponse SendMobile(Payment payment, string phone, string method)
+        public async Task<InitResponse> SendMobileAsync(Payment payment, string phone, string method)
         {
             if (string.IsNullOrEmpty(payment.Reference))
             {
@@ -175,7 +203,7 @@ namespace Webdev.Payments
                     nameof(payment));
             }
 
-            return this.InitMobile(payment, phone, method);
+            return await InitMobileAsync(payment, phone, method);
         }
 
         /// <summary>
@@ -187,9 +215,21 @@ namespace Webdev.Payments
         /// <returns></returns>
         private InitResponse InitMobile(Payment payment, string phone, string method)
         {
+            return InitMobileAsync(payment, phone, method).Result;
+        }
+
+        /// <summary>
+        /// Initiate a new Paynow mobile transaction
+        /// </summary>
+        /// <param name="payment"></param>
+        /// <param name="phone"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        private async Task<InitResponse> InitMobileAsync(Payment payment, string phone, string method)
+        {
             var data = FormatMobileInitRequest(payment, phone, method);
 
-            var response = Client.PostAsync(PaynowBaseUrl + Constants.UrlInitiateMobileTransaction, data);
+            var response = await Client.PostAsync(PaynowBaseUrl + Constants.UrlInitiateMobileTransaction, data);
 
             var parsedResponse = HttpUtility.ParseQueryString(response).ToDictionary();
 
@@ -212,9 +252,20 @@ namespace Webdev.Payments
         /// <exception cref="NotImplementedException"></exception>
         private InitResponse Init(Payment payment)
         {
+            return InitAsync(payment).Result;
+        }
+
+        /// <summary>
+        /// Initiate a new Paynow transaction
+        /// </summary>
+        /// <param name="payment"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private async Task<InitResponse> InitAsync(Payment payment)
+        {
             var data = FormatInitRequest(payment);
 
-            var response = Client.PostAsync(PaynowBaseUrl + Constants.UrlInitiateTransaction, data);
+            var response = await Client.PostAsync(PaynowBaseUrl + Constants.UrlInitiateTransaction, data);
 
             var parsedResponse = HttpUtility.ParseQueryString(response).ToDictionary();
 

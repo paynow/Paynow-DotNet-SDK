@@ -19,13 +19,13 @@ namespace Webdev.Http
         /// <param name="url"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public string PostAsync(string url, Dictionary<string, string> data = null)
+        public async Task<string> PostAsync(string url, Dictionary<string, string> data = null)
         {
             var content = new FormUrlEncodedContent(data ?? new Dictionary<string, string>());
 
-            var response = _client.PostAsync(url, content).Result;
+            var response = await _client.PostAsync(url, content);
 
-            return response.Content.ReadAsStringAsync().Result;
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }
