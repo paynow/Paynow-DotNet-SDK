@@ -2,9 +2,9 @@
 <package >
 	<metadata>
 		<id>Paynow</id>
-		<version>1.0.4</version>
+		<version>1.2.0</version>
 		<title>Paynow .NET SDK</title>
-		<authors>Softwarehouse (Pvt) Ltd</authors>
+		<authors>Paynow</authors>
 		<owners>Softwarehouse (Pvt) Ltd</owners>
 		<projectUrl>https://developers.paynow.co.zw/docs/csharp_quickstart.html</projectUrl>
 		<icon>paynow.png</icon>
@@ -13,9 +13,13 @@
 		<releaseNotes></releaseNotes>
 		<copyright>Copyright (c) Softwarehouse (Pvt) Ltd 2024</copyright>
 		<tags>paynow, zimbabwe, online, payment, gateway, ecocash, onemoney, telecash, visa, mastercard, innbucks, zimswitch, vpayments, paygo, eft, rtgs, mobile, banking</tags>
+		<repository type="git" url="https://github.com/paynow/Paynow-DotNet-SDK" />
+		<readme>README.md</readme>
 	</metadata>
 	<files>
-		<file src="bin\Release\Paynow.dll" target="lib" />
-		<file src="bin\Release\Paynow.pdb" target="lib" />
+		<file src="bin\Release\Paynow.dll" target="lib\net45" />
+		<file src="bin\Release\Paynow.pdb" target="lib\net45" />
+		<file src="paynow.png" target="" />
+		<file src="README.md" target="" />
 	</files>
 </package>
